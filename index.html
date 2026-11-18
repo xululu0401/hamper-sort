@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分一筐脏衣服 · 白的深的掉色的、能甩的要轻柔的，最少洗几缸、每缸放什么</title>
+<meta name="description" content="一筐脏衣服里有白的、深的、会掉色的，有能随便洗的、要轻柔的、要走羊毛程序的。把每样衣服几件、多重、什么颜色、能走什么程序填进清单，算最少要洗几缸、每缸放哪几件、走什么程序、水温不超过多少、几点能洗完。">
+<style>
+  :root{--bg:#eef1f2;--paper:#fff;--ink:#1f2a30;--ink2:#4b5960;--mut:#85929a;--line:#d9e0e3;--hi:#1f6e8c;--hi2:#dcedf4;--bad:#b23b2e;
+    --cw:#f4f4f1;--cl:#e9dcc4;--cd:#3b4a63;--cb:#c4473a}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 14px 72px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 6px;letter-spacing:.03em}
+  .sub{color:var(--ink2);margin:0;font-size:15.5px}
+  .muted{color:var(--mut);font-size:13.5px}
+  .hide{display:none !important}
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13.5px;color:var(--ink2)}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0;margin-top:14px}
+  .card h2{font-size:16px;margin:0 0 8px}
+  .big{font-size:20px;line-height:1.55;font-weight:700;margin:0 0 8px;overflow-wrap:anywhere}
+  .why{color:var(--ink2);font-size:14.5px;margin:0;overflow-wrap:anywhere}
+  .err{background:#fff4f2;border:1px solid #f0c9c2;color:var(--bad);border-radius:8px;padding:10px 14px;overflow-wrap:anywhere}
+  .err ul{margin:4px 0 0;padding-left:20px}
+  /* 每缸一张卡 */
+  .loads{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:12px}
+  .load{border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0;background:#fbfcfc;position:relative}
+  .load .hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .load .no{font-size:22px;font-weight:800}
+  .load .pg{font-size:13px;border-radius:4px;padding:0 6px;background:var(--hi2);color:var(--hi);white-space:nowrap}
+  .load .pg.p1{background:#efe6f6;color:#6a3d8f} .load .pg.p2{background:#f6ecdc;color:#8a5a14}
+  .load .meta{font-size:13px;color:var(--ink2);margin:2px 0 6px}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #b9c2c6;vertical-align:-1px;margin-right:2px}
+  .sw.w{background:var(--cw)} .sw.l{background:var(--cl)} .sw.d{background:var(--cd)} .sw.b{background:var(--cb)}
+  .bar{height:10px;border-radius:5px;background:#e8edef;overflow:hidden;margin:4px 0 2px}
+  .bar i{display:block;height:100%;background:var(--hi)}
+  .load ul{margin:6px 0 0;padding-left:18px;font-size:14px}
+  .load li{overflow-wrap:anywhere}
+  .load .note{font-size:12.5px;color:var(--mut);margin-top:4px;overflow-wrap:anywhere}
+  .acts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .act{text-align:left;background:#eef6f9;border:1px solid var(--hi2);color:var(--ink);border-radius:8px;padding:7px 10px;font-size:14.5px;overflow-wrap:anywhere}
+  .act:hover{background:#e0eff5}
+  /* 清单 */
+  .list{width:100%;border-collapse:collapse;font-size:14.5px;table-layout:fixed}
+  .list col.c-c{width:58px} .list col.c-w{width:78px} .list col.c-co{width:92px} .list col.c-p{width:80px} .list col.c-t{width:76px} .list col.c-d{width:44px}
+  .list select{padding:4px 2px 4px 6px}
+  .list th{font-size:12.5px;color:var(--mut);font-weight:600;text-align:left;padding:4px}
+  .list td{padding:4px;border-top:1px solid var(--line);vertical-align:middle}
+  .list td.nm{min-width:0}
+  input,select{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 8px;font-size:16px}
+  input.num{text-align:right}
+  input:focus,select:focus{outline:2px solid var(--hi2);border-color:var(--hi)}
+  .bad{border-color:var(--bad)!important;background:#fff4f2!important}
+  .del{background:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--mut)}
+  .add{margin-top:8px;background:#fff;border:1px dashed var(--hi);color:var(--hi);border-radius:6px;padding:5px 12px}
+  .forms{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;margin-top:14px}
+  .forms .card{margin-top:0}
+  .fr{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;align-items:center;margin:6px 0}
+  .fr label{font-size:14px;color:var(--ink2)}
+  .fr label small{display:block;color:var(--mut);font-size:11.5px;line-height:1.3}
+  .fr input{text-align:right}
+  .tg{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--ink2);margin:6px 0}
+  .tg input{width:auto;margin-top:5px}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .tools button{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:14px}
+  details{margin-top:16px}
+  details summary{cursor:pointer;font-weight:600}
+  details li{font-size:14px;color:var(--ink2);margin:4px 0}
+  @media (max-width:860px){
+    .forms{grid-template-columns:minmax(0,1fr)}
+    h1{font-size:24px}
+    .big{font-size:17.5px}
+    .card{padding:12px}
+    /* 窄屏清单：每样衣服一块，两行排 */
+    .list thead{display:none}
+    .list{table-layout:auto} .list colgroup{display:none}
+    .list tr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;border-top:1px solid var(--line);padding:8px 0}
+    .list td{border:none;padding:0}
+    .list td.nm{grid-column:1/3} .list td.cc{grid-column:3/4} .list td.ww{grid-column:4/6} .list td.dd{grid-column:6/7}
+    .list td.co,.list td.pp,.list td.tt{grid-row:2/3}
+    .list td.co{grid-column:1/3} .list td.pp{grid-column:3/5} .list td.tt{grid-column:5/7}
+    .list td.dd .del{width:100%}
+    .mhint{display:block !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>分一筐脏衣服</h1>
+  <p class="sub">白的、深的、会掉色的，能随便洗的、要轻柔的、要走羊毛程序的，全在一个筐里。把每样衣服几件、多重、什么颜色、最多能走什么程序填进清单，算最少要洗几缸、每缸放哪几件、走什么程序、水温别超过多少、几点能全部洗完。</p>
+  <div class="chips" id="presets"></div>
+  <p class="muted" id="presetNote"></p>
+
+  <div class="card">
+    <div id="errBox" class="err hide"></div>
+    <div id="okBox">
+      <p class="big" id="headline"></p>
+      <p class="why" id="why"></p>
+      <div class="loads" id="loads"></div>
+    </div>
+  </div>
+
+  <div class="card" id="actCard">
+    <h2>想少洗一缸（点了直接改条件）</h2>
+    <div class="acts" id="acts"></div>
+  </div>
+
+  <div class="forms">
+    <div class="card">
+      <h2>筐里有什么</h2>
+      <p class="muted mhint" style="display:none;margin:0">每样两行：名字 · 件数 · 每件克 ／ 颜色 · 最多能走的程序 · 水温上限</p>
+      <table class="list">
+        <colgroup><col><col class="c-c"><col class="c-w"><col class="c-co"><col class="c-p"><col class="c-t"><col class="c-d"></colgroup>
+        <thead><tr><th>衣服</th><th>件数</th><th>每件克</th><th>颜色</th><th>最多能走</th><th>水温上限</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <button type="button" class="add" id="addRow">＋ 加一样</button>
+      <p class="muted" style="margin:6px 0 0">干重参考：T恤 150–200 克、牛仔裤 600–700 克、浴巾 500–700 克、双人被套 1.2–1.8 公斤；拿不准就上秤称。洗标上画手的、写「轻柔」的选轻柔；写「羊毛」的选羊毛。</p>
+    </div>
+    <div class="card">
+      <h2>洗衣机</h2>
+      <div class="fr"><label for="name">这筐叫什么</label><input id="name" maxlength="16" style="text-align:left"></div>
+      <div class="fr"><label for="cap">额定容量<small>公斤，铭牌上那个数</small></label><input id="cap" inputmode="decimal"></div>
+      <div class="fr"><label for="pct0">标准程序能装<small>额定的百分之几</small></label><input id="pct0" inputmode="numeric"></div>
+      <div class="fr"><label for="pct1">轻柔程序能装<small>%，说明书常写一半</small></label><input id="pct1" inputmode="numeric"></div>
+      <div class="fr"><label for="pct2">羊毛程序能装<small>%，常见 2 公斤上下</small></label><input id="pct2" inputmode="numeric"></div>
+      <div class="fr"><label for="min0">标准一缸<small>分钟</small></label><input id="min0" inputmode="numeric"></div>
+      <div class="fr"><label for="min1">轻柔一缸<small>分钟</small></label><input id="min1" inputmode="numeric"></div>
+      <div class="fr"><label for="min2">羊毛一缸<small>分钟</small></label><input id="min2" inputmode="numeric"></div>
+      <div class="fr"><label for="start">几点开始洗</label><input id="start" placeholder="09:00"></div>
+      <div class="fr"><label for="gap">每缸之间<small>分钟，取出来晾、放下一缸</small></label><input id="gap" inputmode="numeric"></div>
+      <label class="tg"><input type="checkbox" id="wl">白的和浅色的可以一起洗</label>
+      <label class="tg"><input type="checkbox" id="ld">浅色和深色的可以一起洗</label>
+      <p class="muted" style="margin:6px 0 0">白和深永远分开；「易掉色」只和易掉色的一起。改完自动重算 <span id="saveTag"></span></p>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button type="button" id="dlPng">结果卡 PNG</button>
+    <button type="button" id="dlCsv">每缸清单 CSV</button>
+    <button type="button" id="dlMd">文字版 MD</button>
+    <button type="button" id="dlJson">备份 JSON</button>
+    <button type="button" id="impJson">导入备份</button>
+    <input type="file" id="impFile" accept=".json,application/json" class="hide">
+    <button type="button" id="reset">回到默认</button>
+  </div>
+  <p class="muted" id="impMsg"></p>
+
+  <details>
+    <summary>怎么算的、哪些不算</summary>
+    <ul>
+      <li>颜色分四类：白、浅、深、易掉色（新买的红色牛仔之类）。白和深永远分开，易掉色只和易掉色同缸；白+浅、浅+深能不能一起由你勾。</li>
+      <li>每样衣服写它最多能走哪个程序：标准、轻柔、羊毛。一缸走缸里最温和的那个程序；能洗标准的跟着走轻柔没问题，只是洗得没那么彻底，这里叫「降档」。</li>
+      <li>每种程序一缸最多装「额定容量 × 这个程序的百分比」干衣重量（按克向下取整），百分比看说明书。一缸的水温取缸里每件水温上限里最低的。</li>
+      <li>先让缸数最少；缸数一样时，让被迫降档的衣服重量最少。每件衣服放进每一缸的分法逐个试（相同的衣服不重复试），能证明是最少的才写「最少」；搜索步数到上限没试完时，页面会写「没能证明是最少」。</li>
+      <li>时间按「标准/轻柔/羊毛一缸多少分钟」加「每缸之间多少分钟」顺着排，不含烘干、晾干。</li>
+      <li>不判断面料、不认洗标符号，颜色和程序按你填的；默认数字是虚构示例。</li>
+    </ul>
+  </details>
+</div>
+<script src="./core.js"></script>
+<script src="./ui.js"></script>
+</body>
+</html>
